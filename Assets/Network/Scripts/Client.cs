@@ -11,17 +11,24 @@ public class Client : MonoBehaviour
     [SerializeField] TMP_InputField ipField;
     [SerializeField] TMP_InputField portField;
 
-    private string clientName;
-    private string ip;
-    private int port;
+    private string clientName;   // 어떤 이름으로 진행하고 있는지
+    private string ip;           // 어떤 Ip인지
+    private int port;            // 어떤 포트인지
 
     public bool IsConnect { get; private set; } = false;
 
-    private TcpClient client;
-    private NetworkStream stream;
-    private StreamWriter writer;
-    private StreamReader reader;
-
+    private TcpClient client;       // 소켓통신을 제어하기위한 클래스
+    private NetworkStream stream;   // 소켓의 받거나 보내기 위한 버퍼를 준비하는데 해당 버퍼를 형태로 쭉 읽거나, 보내기 위한 클래스
+    private StreamWriter writer;    // 버퍼 형태로 담아둔다? (보내기)
+    private StreamReader reader;    // 한번에 읽기위한 클래스 (읽기)
+    
+    /* 버퍼
+     * 데이터를 한곳에서 일시적으로 보관하는 메모리의 영역
+     * 
+     * 사용예시
+     * A가 데이터를 1초당 3개 보낼수 있고 B가 1초당 100개를 받을수있는데
+     * A에서 B로 바로 보내면 B가 효율적이지 못해 버퍼를 사용하여? A에 데이터들을 모아서 한번에 B에게 보내는데 사용된다?
+     */
     private void Update()
     {
         if ( IsConnect && stream.DataAvailable )
@@ -34,6 +41,7 @@ public class Client : MonoBehaviour
 
     private void OnDisable()
     {
+        //없어질때 삭제
         if ( IsConnect )
             DisConnect();
     }
@@ -54,7 +62,7 @@ public class Client : MonoBehaviour
         {
             clientName = nameField.text;
         }
-        ip = ipField.text == "" ? "127.0.0.1" : ipField.text;
+        ip = ipField.text == "" ? "127.0.0.1" : ipField.text; // 127.0.0.1 현재 컴퓨터의 ip
         port = portField.text == "" ? 5555 : int.Parse(portField.text);
 
         try
@@ -105,7 +113,7 @@ public class Client : MonoBehaviour
         try
         {
             writer.WriteLine($"{clientName} : {chatText}");
-            writer.Flush();
+            writer.Flush(); // 지꺼기없애기
         }
         catch ( System.Exception e )
         {

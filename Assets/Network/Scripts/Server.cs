@@ -19,9 +19,9 @@ public class Server : MonoBehaviour
     private IPAddress ip;
     private int port;
 
-    TcpListener listener;
-    List<TcpClient> connectedClients;
-    List<TcpClient> disConnectedClients;
+    TcpListener listener;                   // 서버
+    List<TcpClient> connectedClients;       // 접속중이 클라이언트들 저장
+    List<TcpClient> disConnectedClients;    // 나간 클라이언트를 저장
 
     private void OnEnable()
     {
