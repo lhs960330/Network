@@ -26,6 +26,7 @@ public class LobbyPanel : MonoBehaviour
     }
     public void LeaveLobby()
     {
+        // 로비로 가기(버튼으로)
         PhotonNetwork.LeaveLobby();
     }
 
@@ -37,10 +38,12 @@ public class LobbyPanel : MonoBehaviour
             // 1. 방이 사라지는 경우
             if ( roomInfo.RemovedFromList || roomInfo.IsOpen == false || roomInfo.IsVisible == false )        // 1. 방이 사라지는 경우,2. 방이 닫혀있는경우 ,3. 방이 비공개인 경우 
             {
+                if ( roomDictionary.ContainsKey(roomInfo.Name) )
+                    continue;
+
                 RoomEntry roomEntry = roomDictionary [roomInfo.Name];   // 이름을 통해 찾는다.
                 roomDictionary.Remove(roomInfo.Name);                  // 사라진 방을 삭제한다.
                 Destroy(roomEntry.gameObject);                          // 방 게임오브젝트 삭제
-                continue;
             }
             // 2. 방이 내용뮬이 바뀌는 경우
             if ( roomDictionary.ContainsKey(roomInfo.Name) )            // 원래 있던 방 

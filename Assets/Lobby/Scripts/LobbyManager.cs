@@ -1,3 +1,4 @@
+using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
 using System.Collections.Generic;
@@ -78,9 +79,13 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     {
         roomPanel.PlayerLeftRoom(otherPlayer);
     }
-    public override void OnMasterClientSwitched( Player newMasterClient )
+    public override void OnMasterClientSwitched( Player newMasterClient )    // 마스터가 바꼈을 때 
     {
         roomPanel.MasterClientSwitched(newMasterClient);
+    }
+    public override void OnPlayerPropertiesUpdate( Player targetPlayer, Hashtable changedProps ) // 플레이어의 프로퍼티가 바꼈을때 (좀 느림)
+    {
+        roomPanel.PlayerPropertyiesUpdate(targetPlayer, changedProps);
     }
     private void Start()
     {
