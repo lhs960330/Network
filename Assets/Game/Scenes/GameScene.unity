@@ -302,7 +302,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &745610618
 Transform:
   m_ObjectHideFlags: 0
@@ -331,6 +331,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DebugRoomName: Debug Room Game
+  spawnStoneTime: 3
 --- !u!1 &953336283
 GameObject:
   m_ObjectHideFlags: 0
@@ -720,7 +721,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1776876137
 MonoBehaviour:
   m_ObjectHideFlags: 0
