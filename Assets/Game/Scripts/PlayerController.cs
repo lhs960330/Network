@@ -1,6 +1,5 @@
 using Photon.Pun;
 using Photon.Pun.UtilityScripts;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -42,7 +41,6 @@ public class PlayerController : MonoBehaviourPun, IPunObservable // IPunObservab
         Rotate();
         //transform.Translate(moveDir * moveSpeed * Time.deltaTime);
     }
-
     private void Accelate()
     {
         rigid.AddForce(moveDir.z * transform.forward * movePower, ForceMode.Force);
@@ -64,29 +62,31 @@ public class PlayerController : MonoBehaviourPun, IPunObservable // IPunObservab
         moveDir.z = value.Get<Vector2>().y;
     }
 
+    // 신청
     private void OnFire( InputValue value )
     {
         // 아이디가 필요하니 포톤뷰를 기준으로 RPC함수를 호출
         photonView.RPC("RequestCreateBullet", RpcTarget.MasterClient);
     }
 
+    // 처리
     [PunRPC]
     private void RequestCreateBullet()
     {
         if ( Time.time < lastFireTime + fireCoolTime )
             return;
 
-        Debug.Log("요청");
-        lastFireTime =Time.time;
+        lastFireTime = Time.time;
         photonView.RPC("ResultCreateBullet", RpcTarget.AllViaServer, transform.position, transform.rotation);
     }
+    // 결과 통보
     // PunRPC은 함수를 원격으로 호출할수 있게 해줌 (이름이 같으면 안됨)
     // RPC는 그럼 네트워크한테 데이터를 바로주나?
     // 지연보상 방법
     [PunRPC]
-    private void ResultCreateBullet(Vector3 position, Quaternion rotation, PhotonMessageInfo info)
+    private void ResultCreateBullet( Vector3 position, Quaternion rotation, PhotonMessageInfo info )
     {
-        float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.SentServerTime));
+        float lag = Mathf.Abs(( float )( PhotonNetwork.Time - info.SentServerTime ));
 
         fireCount++;
         Bullet bullet = Instantiate(bulletPrefab, position, rotation);
@@ -109,11 +109,12 @@ public class PlayerController : MonoBehaviourPun, IPunObservable // IPunObservab
     }
 
     // 얘로 내가 상대방에게 보내고 싶은 데이터들을 써주면됨
+    // 자주 변경되는건 여기다가 자주 변경되지않는건 RPC를 통해서 동기화
     public void OnPhotonSerializeView( PhotonStream stream, PhotonMessageInfo info )
     {
         // 참조들은 전달을 못함
         // Rigidbody rigid = PhotonView.Find(photonView.ViewID).GetComponent<Rigidbody>(); // 포톤뷰의 아이디를 찾아서 그 리지드바디를 가져와서 보내줄수있다.
-        
+
         // SendNext 순서로 ReceiveNext도 같은 순서로 해야된다.
         // 안하면 순서가 바뀌게 되어 받을떄 같은 자료형이면 1에 있던 데이터가 2에서 표현될수도있고
         // 다른 자료형이면 오류가 날수도 있다.

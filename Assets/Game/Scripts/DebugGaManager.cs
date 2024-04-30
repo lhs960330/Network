@@ -1,7 +1,6 @@
 using Photon.Pun;
 using Photon.Realtime;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class DebugGaManager : MonoBehaviourPunCallbacks
@@ -49,8 +48,8 @@ public class DebugGaManager : MonoBehaviourPunCallbacks
         // 포톤 네트워크에 플레이어를 만들어야함(포톤는 Resources를 사용하여 가져와야됨, 포톤 뷰또한 가지고 있어야됨) = 그럼 몬스터들도 포톤 뷰를 들고 있어야되나?
         Vector2 pos = Random.insideUnitCircle * 30;
         PhotonNetwork.Instantiate("Player", new Vector3(pos.x, 0, pos.y), Quaternion.identity);
-        if(PhotonNetwork.IsMasterClient)
-        StartCoroutine(SpawnStoneRoutine());
+        if ( PhotonNetwork.IsMasterClient )
+            spawnStoneRoutine = StartCoroutine(SpawnStoneRoutine());
 
     }
 
@@ -71,8 +70,8 @@ public class DebugGaManager : MonoBehaviourPunCallbacks
 
             if ( Random.Range(0, 2) < 1 )
             {
-                // InstantiateRoomObject는 방 전용 오브젝트이다.(소유권이 마스터가 나가도 다음 방장에게 소유권이 가지게된다.)
-                // Instantiate는 방장이 소유권을 들고있어 다음 방장이 들어올때 사라지게 된다.
+                // InstantiateRoomObject는 방 전용 오브젝트이다.(소유권을 가진 마스터가 나가고 다음 방장에게 소유권이 이전되도 오브젝트가 사라지지 않는다.)
+                // Instantiate는 방장이 소유권을 들고있어 다음 방장에게 이전되면 오브젝트가 사라지게 된다.
                 // 공통적으로 사용할 필요가 있는 오브젝트들에 활용함
                 PhotonNetwork.InstantiateRoomObject("LargeStone", pos, Random.rotation, 0, instantiateDate);
             }
